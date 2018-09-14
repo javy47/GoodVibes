@@ -1,0 +1,10 @@
+{%  extends "base.html" %}
+
+{% block content %}
+
+{% for artist in artists %}
+    <div><p><a href="/drake">{{ artist.musician}}</a></p></div>
+{#     <div><p><a href="{{ artist.musician.page }}">{{ artist.musician}}</a></p></div>#}
+    {% endfor %}
+
+{% endblock %}
