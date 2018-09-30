@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>{{ pages.value }}</p>
+   <h1>Artist Creator</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.artist.label }}<br>
+            {{ form.artist(size=32) }}<br>
+            {% for error in form.artist.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.hometown.label }}<br>
+            {{ form.hometown(size=32) }}<br>
+            {% for error in form.hometown.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.bio.label }}<br>
+            {{ form.bio(size=32) }}<br>
+            {% for error in form.bio.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
 
 {% endblock %}

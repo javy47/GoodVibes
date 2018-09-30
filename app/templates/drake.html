@@ -3,7 +3,7 @@
 {% block content %}
     <h1> Artist :<b>{{ artists.name }}</b></h1>
     <hr>
-    <h2>Biography:</h2>
+    <h2>Description:</h2>
         <p>
             {{ artists.bio }}
                    </p>
@@ -13,12 +13,12 @@
             {{ artists.hometown }}
         </p>
     <hr>
-    <h2>Upcoming Events:</h2>
-    <ul>
+{#    <h2>Upcoming Events:</h2>#}
+{#    <ul>#}
 {#        {% for artist in artists %}#}
-          <li>{{ artists.event1}}</li>
-          <li>{{ artists.event2 }}</li>
-          <li>{{ artists.event3 }}</li>
+{#          <li>{{ artists.event1}}</li>#}
+{#          <li>{{ artists.event2 }}</li>#}
+{#          <li>{{ artists.event3 }}</li>#}
 {#        {% endfor %}#}
-    </ul>
+{#    </ul>#}
 {% endblock %}

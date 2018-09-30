@@ -1,5 +1,7 @@
-from flask import render_template
+from flask import render_template, redirect, flash
 from app import app
+from app.forms import ArtistForm
+
 
 
 @app.route('/')
@@ -43,29 +45,36 @@ def artist_list():
 def artist():
 
     artists = {"name": "Drake",
-             "bio": "The multi-Grammy-award-winning rapper Drake has had two shots at fame — and nailed them both."
-                    " He first came to prominence in the teen soap Degrassi: "
-                    "The Next Generation in the role of Jimmy Brooks"
-                    ", a wheelchair-bound character he played for seven years. After leaving the show he became one of"
-                    " the biggest rappers on the planet after signing a deal with Lil Wayne's label Young "
-                    "Money Entertainment. He is rarely out of the headlines,"
-                    " whether it’s for dating Rihanna or Jennifer"
-                    " Lopez, founding his own label, OVO Sound, or fronting the NBA’s Toronto Raptors as the team's"
-                    " global ambassador. It's no surprise that Jay Z labeled him as the Kobe Bryant of hip hop." ,
-             "hometown": "Toronto, Canada" ,
-             "event1": "Washington, DC 07:00 PM Aubrey & The Three Migos Tour",
-             "event2": "Nashville, TN 07:00 PM Aubrey & The Three Migos Tour",
-             "event3": "Philadelphia, PA 07:00 PM Aubrey & The Three Migos Tour"
+               "bio": "The multi-Grammy-award-winning rapper Drake has had two shots at fame — and nailed them both."
+                        " He first came to prominence in the teen soap Degrassi: "
+                        "The Next Generation in the role of Jimmy Brooks"
+                        ", a wheelchair-bound character he played for seven years. After leaving the show he became one of"
+                        " the biggest rappers on the planet after signing a deal with Lil Wayne's label Young "
+                        "Money Entertainment. He is rarely out of the headlines,"
+                        " whether it’s for dating Rihanna or Jennifer"
+                        " Lopez, founding his own label, OVO Sound, or fronting the NBA’s Toronto Raptors as the team's"
+                        " global ambassador. It's no surprise that Jay Z labeled him as the Kobe Bryant of hip hop." ,
+               "hometown": "Toronto, Canada" ,
+               "event1": "Washington, DC 07:00 PM Aubrey & The Three Migos Tour",
+               "event2": "Nashville, TN 07:00 PM Aubrey & The Three Migos Tour",
+               "event3": "Philadelphia, PA 07:00 PM Aubrey & The Three Migos Tour"
 
 
-             }
+                }
     return render_template('drake.html', artists=artists)
 
 
-@app.route('/create_artist')
+@app.route('/create_artist', methods=['GET', 'POST'])
 def create_artist():
 
-    pages = {
-            'value': 'PAGE IS UNDER CONSTRUCTION'
-        }
-    return render_template('create_artist.html', pages=pages)
+    form = ArtistForm()
+
+    if form.validate_on_submit():
+        flash('Login requested for user {}'.format(
+            form.artist.data))
+        artists = {
+            "name": form.artist.data,
+            "bio": form.bio.data,
+            "hometown": form.hometown.data}
+        return render_template('drake.html',form=form, artists=artists)
+    return render_template('create_artist.html', form=form)
