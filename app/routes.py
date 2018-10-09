@@ -1,6 +1,7 @@
-from flask import render_template, redirect, flash
-from app import app
+from flask import render_template, redirect, flash, url_for
+from app import app, db
 from app.forms import ArtistForm
+from app.models import Artist, ArtistToEvent, Events, Venues
 
 
 
@@ -78,3 +79,30 @@ def create_artist():
             "hometown": form.hometown.data}
         return render_template('drake.html',form=form, artists=artists)
     return render_template('create_artist.html', form=form)
+
+
+@app.route('/reset_db')
+def reset_db():
+   flash("Resetting database: deleting old data and repopulating with dummy data")
+
+   meta = db.metadata
+   for table in reversed(meta.sorted_tables):
+       print('Clear table {}'.format(table))
+       db.session.execute(table.delete())
+   db.session.commit()
+
+   artist1 = Artist(name="Drake", description= "Soon to be added")
+   artist2 = Artist(name='Kendrick Lamar', description="Added after Drake")
+   artist3 = Artist(name='Bob Marley', description='This one was added after kendrick')
+   venue1 = Venues(location='Baltimore Soundstage, Maryland', date='01/24/2018')
+   venue2 = Venues(location='The 20th Century Theater, Ohio', date='04/28/2018')
+   venue3 = Venues(location='The New Parish, California', date='04/29/2018')
+   event1 = Events(name='Aubrey & The Three Migos ', price='$350', venue_id=1)
+   event2 = Events(name='Leeds Festival 2018', price='$170', venue_id=2)
+   a2e = ArtistToEvent(Artist_id=1, Event_id=1)
+   a2e1= ArtistToEvent(Artist_id=2, Event_id=2)
+
+   db.session.add_all(artist1, artist2, artist3, venue1, venue2, venue3, event1, event2, a2e, a2e1)
+   db.session.commit()
+
+   return redirect(url_for('index'))

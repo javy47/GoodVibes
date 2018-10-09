@@ -3,15 +3,18 @@
 
     </head>
     <body>
-    <div><h2>GoodVibes:</h2> <a href="/index">Home</a>
-            <a href="/artist_list">List of Artist</a></div>
-            <a href="/create_artist">Add Artist</a></div>
+    <div>
+        <h2>GoodVibes:</h2>
+         <a href="{{ url_for('index') }}">Home</a>
+         <a href="{{ url_for('artist_list') }}">List of Artist</a>
+         <a href="{{ url_for('create_artist') }}">Add Artist</a>
+    </div>
         <hr>
 
         <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
+        <ul>x
             {% for message in messages %}
             <li>{{ message }}</li>
             {% endfor %}
@@ -21,5 +24,5 @@
 
         {% block content %}{% endblock %}
 
-    </body>
+        </body>
 </html>
