@@ -25,44 +25,53 @@ def index():
 @app.route('/artist_list')
 def artist_list():
 
-        artists = [
-        {
-            'musician': 'John Lenin',
-            # 'page': '/index'
-        },
-        {
-             'musician':  'Drake',
-             # 'page': '/artistpage'
-        }
-        ,
-        {
-            'musician': 'Eminem',
-            # 'page': '/artistpage'
-        }
-        ]
+        alist = Artist.query.order_by(Artist.name).all()
+
+        artists = []
+        x = 0
+        for i in alist:
+             artists.append({'musician': alist[x]})
+             if x == len(alist):
+                 break
+             x = x + 1
+
         return render_template('artist_list.html', artists=artists)
 
-@app.route('/drake')
-def artist():
+@app.route('/artist/<name>')
+def artist(name):
 
-    artists = {"name": "Drake",
-               "bio": "The multi-Grammy-award-winning rapper Drake has had two shots at fame — and nailed them both."
-                        " He first came to prominence in the teen soap Degrassi: "
-                        "The Next Generation in the role of Jimmy Brooks"
-                        ", a wheelchair-bound character he played for seven years. After leaving the show he became one of"
-                        " the biggest rappers on the planet after signing a deal with Lil Wayne's label Young "
-                        "Money Entertainment. He is rarely out of the headlines,"
-                        " whether it’s for dating Rihanna or Jennifer"
-                        " Lopez, founding his own label, OVO Sound, or fronting the NBA’s Toronto Raptors as the team's"
-                        " global ambassador. It's no surprise that Jay Z labeled him as the Kobe Bryant of hip hop." ,
-               "hometown": "Toronto, Canada" ,
-               "event1": "Washington, DC 07:00 PM Aubrey & The Three Migos Tour",
-               "event2": "Nashville, TN 07:00 PM Aubrey & The Three Migos Tour",
-               "event3": "Philadelphia, PA 07:00 PM Aubrey & The Three Migos Tour"
+    aname = Artist.query.filter_by(name=name).first()
 
+    artists = {"name": aname.name,
+               "link": "/artist/"+aname.name,
+               "bio": aname.description,
+               }
+    x = ArtistToEvent.query.filter_by(artist=aname).first()
 
-                }
-    return render_template('drake.html', artists=artists)
+    event = ArtistToEvent.query.filter_by(Artist_id=aname.id).all()
+
+    i = 0
+    alist = []
+    vlist= []
+    event_list = [{"name": alist, "venue": vlist}]
+    artist_iden= []
+
+    for placeholder in event:
+        artist_iden.append(event[i].id)
+        m = Events.query.get(event[i].id)
+        n = m.venue
+        vlist.append(n)
+        alist.append(m)
+
+        event_list = [{"name": alist,
+                       "venue": vlist,
+                       }]
+        if (i+1) == len(event):
+            return render_template('artist.html', artists=artists, event_list=event_list)
+
+        i= i +1
+
+    return render_template('artist.html', artists=artists, event_list=event_list)
 
 
 @app.route('/create_artist', methods=['GET', 'POST'])
@@ -70,14 +79,14 @@ def create_artist():
 
     form = ArtistForm()
 
+    # alist = Artist.query.order_by(Artist.name).all()
+
     if form.validate_on_submit():
-        flash('Login requested for user {}'.format(
-            form.artist.data))
-        artists = {
-            "name": form.artist.data,
-            "bio": form.bio.data,
-            "hometown": form.hometown.data}
-        return render_template('drake.html',form=form, artists=artists)
+        artist1 = Artist(name=form.artist.data, description=form.bio.data)
+        db.session.add(artist1)
+        db.session.commit()
+        flash('Artist {} has been created'.format(artist1))
+
     return render_template('create_artist.html', form=form)
 
 
@@ -102,7 +111,16 @@ def reset_db():
    a2e = ArtistToEvent(Artist_id=1, Event_id=1)
    a2e1= ArtistToEvent(Artist_id=2, Event_id=2)
 
-   db.session.add_all(artist1, artist2, artist3, venue1, venue2, venue3, event1, event2, a2e, a2e1)
+   db.session.add(artist1)
+   db.session.add(artist2)
+   db.session.add(artist3)
+   db.session.add(venue1)
+   db.session.add(venue2)
+   db.session.add(venue3)
+   db.session.add(event1)
+   db.session.add(event2)
+   db.session.add(a2e)
+   db.session.add(a2e1)
    db.session.commit()
 
    return redirect(url_for('index'))
