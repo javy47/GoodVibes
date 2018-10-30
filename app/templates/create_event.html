@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <h1>Event Creator</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.artistName.label }}<br>
+            {{ form.artistName(size=5) }}<br>
+            {% for error in form.artistName.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.eventName.label }}<br>
+            {{ form.eventName(size=32) }}<br>
+            {% for error in form.eventName.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+         <p>
+            {{ form.eventDate.label }}<br>
+            {{ form.eventDate(size=32) }}<br>
+            {% for error in form.eventDate.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.venueName.label }}<br>
+            {{ form.venueName(size=5) }}<br>
+            {% for error in form.venueName.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+{% endblock %}

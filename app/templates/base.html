@@ -6,8 +6,17 @@
     <div>
         <h2>GoodVibes:</h2>
          <a href="{{ url_for('index') }}">Home</a>
+        {% if current_user.is_anonymous %}
+          <a href="{{ url_for('login') }}">Sign In</a>
+        {% else %}
+
          <a href="{{ url_for('artist_list') }}">List of Artist</a>
          <a href="{{ url_for('create_artist') }}">Add Artist</a>
+         <a href="{{ url_for('create_event') }}">Add Event</a>
+         <a href="{{ url_for('create_venue') }}">Add Venue</a>
+         <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+
 
     </div>
         <hr>
